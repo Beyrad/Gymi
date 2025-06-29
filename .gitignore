@@ -1,0 +1,24 @@
+# Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+*.env
+*.sqlite3
+*.db
+*.log
+
+# IDE/Editor files
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Sensitive Django files
+local_settings.py
