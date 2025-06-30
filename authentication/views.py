@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from django.contrib.auth import login, logout, authenticate
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -22,3 +24,17 @@ class Register(APIView):
             return Response(f"User with {user.username=} and {user.phone=} has been created successfully!", status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class Login(APIView):
+    def post(self, request, *args, **kwargs):
+        username = request.data['username']
+        password = request.data['password']
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(user, request)
+            return Response(f"user with {username=} logged in successfully!")
+        else:
+            return Response("invalid credentials", status=status.HTTP_403_FORBIDDEN)
+
