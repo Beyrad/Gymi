@@ -9,7 +9,6 @@ venv/
 *.sqlite3
 *.db
 *.log
-settings.py
 
 # IDE/Editor files
 .idea/

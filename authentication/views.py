@@ -36,5 +36,7 @@ class Login(APIView):
             login(user, request)
             return Response(f"user with {username=} logged in successfully!")
         else:
-            return Response("invalid credentials", status=status.HTTP_403_FORBIDDEN)
+            return Response("invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
+        
+
 
