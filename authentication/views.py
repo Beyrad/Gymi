@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 
 from django.contrib.auth import login, logout, authenticate
 
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from .models import User
 from .serializers import UserSerializer
@@ -21,9 +21,9 @@ class Register(APIView):
             user = serializer.save()
             user.set_password(user.password)
             user.save()
-            return Response(f"User with {user.username=} and {user.phone=} has been created successfully!", status=status.HTTP_201_CREATED)
+            return Response({"message": f"User with {user.username=} and {user.phone=} has been created successfully!"}, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
 
 class Login(APIView):
@@ -33,10 +33,23 @@ class Login(APIView):
 
         user = authenticate(request, username=username, password=password)
         if user:
-            login(user, request)
-            return Response(f"user with {username=} logged in successfully!")
+            login(request, user)
+            return Response({"message": f"user with {username=} logged in successfully!"})
         else:
-            return Response("invalid credentials", status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"message": "invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         
+class Logout(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        username = request.user.username
+        logout(request)
+        return Response({"message": f"{username=} Logged out"})
+    
 
+def test_view(request):
+    x = request.user
+    if not x.is_authenticated:
+        return HttpResponse("No")
+    else:
+        return HttpResponse(x.username)
 
