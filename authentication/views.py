@@ -5,12 +5,13 @@ from django.contrib.auth import login, logout, authenticate
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from .models import User
 from .serializers import UserSerializer
 
 class UsernameList(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, *args, **kwargs):
         return Response(User.objects.values_list('username', flat=True))
 
