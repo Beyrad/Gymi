@@ -10,6 +10,7 @@ from .models import Workout
 from .serializers import WorkoutSerializer
 
 class CreateUpdateWorkout(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, id=None):
         if id:
             workout = get_object_or_404(Workout, id=id)
@@ -17,7 +18,7 @@ class CreateUpdateWorkout(APIView):
                 return Response({"message": "You don't have access to this workout"}, status=status.HTTP_403_FORBIDDEN)
             serializer = WorkoutSerializer(instance=workout, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                workout = serializer.save()
                 return Response({"message": "workout changed successfully", "workout": serializer.data})
             else:
                 return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -25,9 +26,14 @@ class CreateUpdateWorkout(APIView):
             serializer = WorkoutSerializer(data=request.data, context={
                 'user': request.user
             })
-            
+
             if serializer.is_valid():
-                serializer.save()
+                workout = serializer.save()
                 return Response({"message" : "workout created successfully", "workout": serializer.data}, status=status.HTTP_201_CREATED)
             else:
                 return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            
+    def get(self, request):
+        workouts = Workout.objects.filter(user=request.user)
+        serializer = WorkoutSerializer(workouts, many=True)
+        return Response({"Workouts": serializer.data})
