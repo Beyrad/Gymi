@@ -22,7 +22,10 @@ class CreateUpdateWorkout(APIView):
             else:
                 return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer = WorkoutSerializer(data=request.data, user=request.user)
+            serializer = WorkoutSerializer(data=request.data, context={
+                'user': request.user
+            })
+            
             if serializer.is_valid():
                 serializer.save()
                 return Response({"message" : "workout created successfully", "workout": serializer.data}, status=status.HTTP_201_CREATED)
