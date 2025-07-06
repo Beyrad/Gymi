@@ -1,0 +1,31 @@
+{
+"name_english": "bench press",
+"name_persian": "پرس سینه",
+"score": 1,
+"user_tips": "adjust the weight not too high!",
+"sets": [12, 12, 12]
+}
+
+{
+"name_english": "bench press 2",
+"name_persian": "پرس سینه 2",
+"score": 5,
+"user_tips": "adjust the weight not too high! 213",
+"sets": [12, 12, 9]
+}
+
+{
+    "name_english": "bench press 3",
+    "name_persian": "پرس سینه32",
+    "score": 2,
+    "user_tips": "adjust the weight not too high! 213fwe",
+    "sets": [12, 12, 7]
+    }
+
+
+
+{
+    "score": 5,
+    "user_tips": "yooo bro what's up",
+    "sets": [9, 9]
+    }
