@@ -2,6 +2,8 @@ from django.test import TestCase
 
 from authentication.models import User
 
+from decouple import config
+
 class AuthenticationTests(TestCase):
     username = 'test'
     password = '123'
@@ -9,6 +11,7 @@ class AuthenticationTests(TestCase):
 
     def setUp(self):
         User.objects.create_user(username=self.username, password=self.password, phone=self.phone)
+
 
         
     def test_register(self):
@@ -79,8 +82,48 @@ class AuthenticationTests(TestCase):
         self.assertTrue('_auth_user_id' not in self.client.session)
         self.assertEqual(res.json(), {"message": "invalid credentials"})
 
-    def test_logout(self):
+    def test_logout_anonymous(self):
+        res = self.client.post('/authentication/logout/', data={})
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.json(), {"detail": "Authentication credentials were not provided."})
+
+    def test_logout_valid(self):
+        self.client.login(username=self.username, password=self.password)
+
+        res = self.client.post('/authentication/logout/', data={})
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json(), {"message": f"username='{self.username}' Logged out"})
+
+    def test_username_list_valid(self):
+        res = self.client.post('/authentication/login/', data={
+            'username': config('ADMIN_USERNAME'),
+            'password': config('ADMIN_PASSWORD')
+        })
+        print(config('ADMIN_USERNAME'))
+        print(config('ADMIN_PASSWORD'))
+        print(res.json())
+
+        res = self.client.post('/authentication/', data={})
+        self.assertEqual(res.status_code, 200)
+        ls = res.json()
+        self.assertIsInstance(ls, list)
+        self.assertListEqual(ls, User.objects.values_list('username', flat=True))
+
+    def test_username_list_not_admin(self):
+        self.client.login(username=self.username, password=self.password)
         
+        res = self.client.post('/authentication/', data={})
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.json(), {"detail": "You do not have permission to perform this action."})
+        
+    
+
+        
+    
+
+
+
 
 
 
