@@ -11,6 +11,7 @@ class AuthenticationTests(TestCase):
 
     def setUp(self):
         User.objects.create_user(username=self.username, password=self.password, phone=self.phone)
+        User.objects.create_superuser(username="admin", password="verysecurepassword")
 
 
         
@@ -96,24 +97,19 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res.json(), {"message": f"username='{self.username}' Logged out"})
 
     def test_username_list_valid(self):
-        res = self.client.post('/authentication/login/', data={
-            'username': config('ADMIN_USERNAME'),
-            'password': config('ADMIN_PASSWORD')
-        })
-        print(config('ADMIN_USERNAME'))
-        print(config('ADMIN_PASSWORD'))
-        print(res.json())
-
-        res = self.client.post('/authentication/', data={})
+        self.client.login(username='admin', password='verysecurepassword')
+        
+        res = self.client.get('/authentication/')
         self.assertEqual(res.status_code, 200)
+
         ls = res.json()
         self.assertIsInstance(ls, list)
-        self.assertListEqual(ls, User.objects.values_list('username', flat=True))
+        self.assertListEqual(ls, list(User.objects.values_list('username', flat=True)))
 
     def test_username_list_not_admin(self):
         self.client.login(username=self.username, password=self.password)
         
-        res = self.client.post('/authentication/', data={})
+        res = self.client.get('/authentication/')
         self.assertEqual(res.status_code, 403)
         self.assertEqual(res.json(), {"detail": "You do not have permission to perform this action."})
         
