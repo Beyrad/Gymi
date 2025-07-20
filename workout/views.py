@@ -40,12 +40,12 @@ class CreateUpdateWorkout(APIView):
     
 class HowToDo(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self, request, id, *args, **kwargs):
+    def get(self, request, id, *args, **kwargs):
         workout = get_object_or_404(Workout, id=id)
         if workout.user != request.user:
             return Response({"message": "You don't have access to this workout"}, status=status.HTTP_403_FORBIDDEN)
         
         res = workout.AskHowToDo()
-        return res
+        return Response({"message": res})
 
 

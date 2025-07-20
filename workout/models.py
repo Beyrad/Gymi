@@ -46,5 +46,18 @@ class Workout(models.Model):
         res = Ask(f"How to do this workout called {self.name_english} demonstrate the steps clearly and say the safety tips")
         return res
     
+    @classmethod
+    def OverallCheck(cls, user):
+        from .serializers import WorkoutSerializer
+        import json
 
+        workouts = cls.objects.filter(user=user)
+        prompt = f"study the state of this user called {user.username}. this person is going to gym and i want you to check the exercises that this person does and give him some feedback. think you are talking to this person.\n"
+        prompt += "Workouts:\n"
+        for workout in workouts:
+            serializer = WorkoutSerializer(instance=workout)
+            prompt += json.dumps(serializer.data)  #number of tokens sent can be optimized by igonring the empty fields
+            prompt += '\n'
+        
+        return Ask(prompt)
 

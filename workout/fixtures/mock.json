@@ -1,0 +1,103 @@
+[
+    {
+      "user": 6,
+      "name_english": "Push Up",
+      "name_persian": "شنا سوئدی",
+      "score": 2,
+      "user_tips": "Keep your core engaged throughout.",
+      "sets": [{"reps": 15}, {"reps": 12}],
+      "how_to_do": "Lower your body until your chest nearly touches the floor, then push back up.",
+      "last_weight": null
+    },
+    {
+      "user": 6,
+      "name_english": "Deadlift",
+      "name_persian": "ددلیفت",
+      "score": 3,
+      "user_tips": "Use your hips to lift, not your back.",
+      "sets": [{"reps": 5, "weight": 100}, {"reps": 3, "weight": 110}],
+      "how_to_do": "Lift the barbell with a straight back from the ground to hips.",
+      "last_weight": 110
+    },
+    {
+      "user": 6,
+      "name_english": "Bench Press",
+      "name_persian": "پرس سینه",
+      "score": 3,
+      "user_tips": "Keep your elbows at a 45-degree angle.",
+      "sets": [{"reps": 8, "weight": 60}, {"reps": 6, "weight": 70}],
+      "how_to_do": "Press the bar up and lower it slowly.",
+      "last_weight": 70
+    },
+    {
+      "user": 6,
+      "name_english": "Pull Up",
+      "name_persian": "بارفیکس",
+      "score": 2,
+      "user_tips": "Avoid swinging—keep movement controlled.",
+      "sets": [{"reps": 10}, {"reps": 8}],
+      "how_to_do": "Grip the bar and pull yourself up until your chin is above it.",
+      "last_weight": null
+    },
+    {
+      "user": 6,
+      "name_english": "Barbell Row",
+      "name_persian": "روئینگ با هالتر",
+      "score": 3,
+      "user_tips": "Squeeze your shoulder blades at the top.",
+      "sets": [{"reps": 10, "weight": 50}, {"reps": 8, "weight": 55}],
+      "how_to_do": "Pull the bar towards your lower chest while bent over.",
+      "last_weight": 55
+    },
+    {
+      "user": 6,
+      "name_english": "Lunges",
+      "name_persian": "لانج",
+      "score": 1,
+      "user_tips": "Keep your front knee aligned with your foot.",
+      "sets": [{"reps": 12}, {"reps": 10}],
+      "how_to_do": "Step forward, bend knees, and push back.",
+      "last_weight": null
+    },
+    {
+      "user": 6,
+      "name_english": "Overhead Press",
+      "name_persian": "پرس بالای سر",
+      "score": 2,
+      "user_tips": "Brace your core before pressing.",
+      "sets": [{"reps": 6, "weight": 40}, {"reps": 5, "weight": 45}],
+      "how_to_do": "Press the barbell overhead from shoulder level.",
+      "last_weight": 45
+    },
+    {
+      "user": 6,
+      "name_english": "Crunch",
+      "name_persian": "کِرانچ",
+      "score": 1,
+      "user_tips": "Don’t pull on your neck—lift from your abs.",
+      "sets": [{"reps": 20}, {"reps": 15}],
+      "how_to_do": "Lie on your back, lift your shoulders toward your knees.",
+      "last_weight": null
+    },
+    {
+      "user": 6,
+      "name_english": "Leg Press",
+      "name_persian": "پرس پا",
+      "score": 3,
+      "user_tips": "Control the descent—don’t lock knees.",
+      "sets": [{"reps": 10, "weight": 120}, {"reps": 8, "weight": 130}],
+      "how_to_do": "Push the platform away with your legs from a seated position.",
+      "last_weight": 130
+    },
+    {
+      "user": 6,
+      "name_english": "Plank",
+      "name_persian": "پلنک",
+      "score": 2,
+      "user_tips": "Keep a straight line from head to heels.",
+      "sets": [{"duration_sec": 60}, {"duration_sec": 45}],
+      "how_to_do": "Hold a push-up position with forearms grounded.",
+      "last_weight": null
+    }
+  ]
+  
