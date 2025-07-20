@@ -37,6 +37,7 @@ class Workout(models.Model):
 
     def AskHowToDo(self):
         res = Ask(f"How to do this workout called {self.name_english} demonstrate the steps clearly and say the safety tips")
+        return res
 
     
 
