@@ -6,7 +6,7 @@ class WorkoutSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Workout
-        fields = ['id', 'name_english', 'name_persian', 'score', 'user_tips', 'sets']
+        fields = ['id', 'name_english', 'name_persian', 'score', 'user_tips', 'sets', 'last_weight']
         read_only_fields = ['id', 'user']
 
     def validate(self, data):
