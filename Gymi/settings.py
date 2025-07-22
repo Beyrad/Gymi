@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication.apps.AuthenticationConfig',
     'workout.apps.WorkoutConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -129,3 +131,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.User'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8888",
+    "http://127.0.0.1:8888",
+    "http://0.0.0.0:8888",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8888",
+    "http://127.0.0.1:8888",
+    "http://0.0.0.0:8888",
+]
+
+
+CORS_ALLOW_CREDENTIALS = True
