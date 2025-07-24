@@ -138,11 +138,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://0.0.0.0:8888",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+
+
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8888",
     "http://127.0.0.1:8888",
     "http://0.0.0.0:8888",
 ]
+CSRF_COOKIE_HTTPONLY = False
 
 
-CORS_ALLOW_CREDENTIALS = True
+

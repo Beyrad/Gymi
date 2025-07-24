@@ -1,14 +1,22 @@
 from django.shortcuts import render, HttpResponse
-
 from django.contrib.auth import login, logout, authenticate
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import api_view
+
 
 from .models import User
 from .serializers import UserSerializer
+
+@ensure_csrf_cookie
+@api_view(['GET'])
+def CsrfInit(request):
+    return Response({"message": "csrf cookie set successfully!"})
+
 
 class UsernameList(APIView):
     permission_classes = [IsAdminUser]
@@ -17,6 +25,7 @@ class UsernameList(APIView):
 
 class Register(APIView):
     def post(self, request, *args, **kwargs):
+        print(request.data)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()

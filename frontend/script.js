@@ -2,6 +2,7 @@
 let user = null;
 let workouts = [];
 let currentWorkout = null;
+let csrfToken = null;
 
 const API_BASE = 'http://localhost:8000';
 
@@ -16,7 +17,20 @@ const navLogout = document.getElementById('nav-logout');
 window.addEventListener('hashchange', renderRoute);
 window.addEventListener('DOMContentLoaded', renderRoute);
 
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+}
+
 function renderRoute() {
+
+    fetch('http://localhost:8000/authentication/csrf-init/', {
+        method: 'GET',
+        credentials: 'include'
+    }).then(() => {
+        csrfToken = getCookie('csrftoken');
+    });
+
     const hash = window.location.hash || '#login';
     if (!user && hash !== '#register') {
         renderLogin();
@@ -62,7 +76,10 @@ function renderLogin() {
         const fd = new FormData(e.target);
         const res = await fetch(`${API_BASE}/authentication/login/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
             credentials: 'include',
             body: JSON.stringify({
                 username: fd.get('username'),
@@ -77,22 +94,6 @@ function renderLogin() {
         }
     };
 }
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === (name + "=")) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-}
-  
 
 function renderRegister() {
     setNav();
@@ -111,7 +112,10 @@ function renderRegister() {
         const fd = new FormData(e.target);
         const res = await fetch(`${API_BASE}/authentication/register/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
             credentials: 'include',
             body: JSON.stringify({
                 username: fd.get('username'),
@@ -130,7 +134,10 @@ function renderRegister() {
 }
 
 async function handleLogout() {
-    await fetch(`${API_BASE}/authentication/logout/`, { method: 'POST', credentials: 'include' });
+    await fetch(`${API_BASE}/authentication/logout/`, { method: 'POST', headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+    }, credentials: 'include' });
     user = null;
     window.location.hash = '#login';
 }
@@ -227,7 +234,10 @@ function showWorkoutModal(w = null) {
         const url = w ? `${API_BASE}/workout/${w.id}/` : `${API_BASE}/workout/`;
         const res = await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
             credentials: 'include',
             body: JSON.stringify(payload)
         });
