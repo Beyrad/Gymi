@@ -17,6 +17,7 @@ class UsernameList(APIView):
 
 class Register(APIView):
     def post(self, request, *args, **kwargs):
+        print(request.data)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
