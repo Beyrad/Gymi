@@ -203,6 +203,24 @@ function formatSets(sets) {
 }
 
 function showWorkoutModal(w = null) {
+    // Helper to render the dynamic sets input UI
+    function renderSetsInputs(setsArr) {
+        return `
+            <div id="sets-container">
+                ${setsArr.map((val, idx) => `
+                    <div class="set-row">
+                        <input type="number" class="set-input" value="${val}" min="1" style="width:70px;" />
+                        <button type="button" class="delete-set" data-idx="${idx}" style="margin-left:4px;">&minus;</button>
+                    </div>
+                `).join('')}
+            </div>
+            <button type="button" id="add-set" style="margin-top:8px;">+ Add Set</button>
+        `;
+    }
+
+    // For add: start with empty array. For edit: pre-fill only if sets exist and are array of numbers.
+    let setsArr = (w && Array.isArray(w.sets) && w.sets.every(x => typeof x === 'number')) ? [...w.sets] : [];
+
     showModal(`
         <h3>${w ? 'Edit Workout' : 'Add Workout'}</h3>
         <form id="workout-form">
@@ -210,18 +228,46 @@ function showWorkoutModal(w = null) {
             <input type="text" name="name_persian" placeholder="Persian Name" value="${w?.name_persian || ''}" />
             <input type="number" name="score" placeholder="Score (1-5)" min="1" max="5" value="${w?.score || ''}" />
             <textarea name="user_tips" placeholder="User Tips">${w?.user_tips || ''}</textarea>
-            <input type="text" name="sets" placeholder='Sets (e.g. [{"reps":10,"weight":50}])' value='${w?.sets ? JSON.stringify(w.sets) : ''}' />
+            <label>Sets:</label>
+            <div id="sets-dynamic-area">${renderSetsInputs(setsArr)}</div>
             <input type="number" name="last_weight" placeholder="Last Weight" value="${w?.last_weight || ''}" />
             <button type="submit">${w ? 'Update' : 'Add'}</button>
             <button type="button" id="close-modal">Cancel</button>
         </form>
     `);
     document.getElementById('close-modal').onclick = closeModal;
+
+    // Dynamic sets logic
+    function updateSetsUI() {
+        document.getElementById('sets-dynamic-area').innerHTML = renderSetsInputs(setsArr);
+        attachSetsHandlers();
+    }
+    function attachSetsHandlers() {
+        document.getElementById('add-set').onclick = () => {
+            setsArr.push("");
+            updateSetsUI();
+        };
+        document.querySelectorAll('.delete-set').forEach(btn => {
+            btn.onclick = (e) => {
+                const idx = parseInt(btn.getAttribute('data-idx'));
+                setsArr.splice(idx, 1);
+                updateSetsUI();
+            };
+        });
+    }
+    attachSetsHandlers();
+
     document.getElementById('workout-form').onsubmit = async (e) => {
         e.preventDefault();
-        const fd = new FormData(e.target);
+        // Collect sets from UI
+        const setInputs = document.querySelectorAll('.set-input');
         let sets = [];
-        try { sets = JSON.parse(fd.get('sets') || '[]'); } catch { alert('Invalid sets format!'); return; }
+        for (let input of setInputs) {
+            let val = parseInt(input.value);
+            if (!isNaN(val) && val > 0) sets.push(val);
+        }
+        if (sets.length === 0) { alert('Please add at least one set.'); return; }
+        const fd = new FormData(e.target);
         const payload = {
             name_english: fd.get('name_english'),
             name_persian: fd.get('name_persian'),
@@ -230,10 +276,9 @@ function showWorkoutModal(w = null) {
             sets: sets,
             last_weight: fd.get('last_weight') ? parseFloat(fd.get('last_weight')) : null
         };
-        const method = w ? 'PUT' : 'POST';
         const url = w ? `${API_BASE}/workout/${w.id}/` : `${API_BASE}/workout/`;
         const res = await fetch(url, {
-            method,
+            method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken
@@ -265,16 +310,49 @@ function closeModal() {
 // --- AI Features ---
 async function showAIHowTo(w) {
     showModal('<p>Loading AI instructions...</p>');
-    const res = await fetch(`${API_BASE}/workout/ask/${w.id}`, { credentials: 'include' });
-    if (res.ok) {
-        const data = await res.json();
-        showModal(`<h3>AI: How to do ${w.name_english}</h3><p>${data.message}</p><button id="close-modal">Close</button>`);
-        document.getElementById('close-modal').onclick = closeModal;
-    } else {
-        showModal('<p>Failed to get AI instructions.</p><button id="close-modal">Close</button>');
-        document.getElementById('close-modal').onclick = closeModal;
+  
+    try {
+      const res = await fetch(`${API_BASE}/workout/ask/${w.id}`, { credentials: 'include' });
+  
+      if (!res.ok) throw new Error('Fetch failed');
+  
+      const data = await res.json();
+  
+      // Parse and inject Markdown
+      const html = marked.parse(data.message); // 'marked' must be loaded
+      showModal(`
+        <div class="modal-header">
+          <h3>AI: How to do ${w.name_english}</h3>
+        </div>
+        <div class="modal-body">
+          <div id="markdown-output">${html}</div>
+        </div>
+        <div class="modal-footer">
+          <button id="close-modal">Close</button>
+        </div>
+      `);
+  
+      document.getElementById('close-modal').onclick = closeModal;
+    } catch (err) {
+      console.error(err);
+      showModal('<p>Failed to get AI instructions.</p><button id="close-modal">Close</button>');
+      document.getElementById('close-modal').onclick = closeModal;
     }
 }
+// async function showAIHowTo(w) {
+//     showModal('<p>Loading AI instructions...</p>');
+//     const res = await fetch(`${API_BASE}/workout/ask/${w.id}`, { credentials: 'include' });
+//     if (res.ok) {
+//         const data = await res.json();
+//         // Render markdown using marked.js
+//         let html = window.marked ? window.marked.parse(data.message) : data.message;
+//         showModal(`<h3>AI: How to do ${w.name_english}</h3><div>${html}</div><button id="close-modal">Close</button>`);
+//         document.getElementById('close-modal').onclick = closeModal;
+//     } else {
+//         showModal('<p>Failed to get AI instructions.</p><button id="close-modal">Close</button>');
+//         document.getElementById('close-modal').onclick = closeModal;
+//     }
+// }
 
 async function showAIFeedback() {
     showModal('<p>Loading AI feedback...</p>');
