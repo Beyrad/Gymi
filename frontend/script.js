@@ -376,7 +376,13 @@ function closeModal() {
 
 // --- AI Features ---
 async function showAIHowTo(w) {
-    showModal('<p class="text-center">Loading AI instructions...</p>');
+    showModal(`
+      <div class="d-flex flex-column align-items-center justify-content-center p-4">
+        <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+        <div class="text-info fw-bold mb-2">The AI is thinking...</div>
+        <div class="text-secondary">Please wait while we fetch your personalized instructions.</div>
+      </div>
+    `);
   
     try {
       const res = await fetch(`${API_BASE}/workout/ask/${w.id}`, { credentials: 'include' });
@@ -422,7 +428,13 @@ async function showAIHowTo(w) {
 // }
 
 async function showAIFeedback() {
-    showModal('<p class="text-center">Loading AI feedback...</p>');
+    showModal(`
+      <div class="d-flex flex-column align-items-center justify-content-center p-4">
+        <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+        <div class="text-info fw-bold mb-2">The AI is thinking...</div>
+        <div class="text-secondary">Please wait while we analyze your workouts.</div>
+      </div>
+    `);
     try {
         const res = await fetch(`${API_BASE}/workout/check/`, { credentials: 'include' });
         if (!res.ok) throw new Error('Fetch failed');
