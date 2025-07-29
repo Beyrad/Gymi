@@ -48,4 +48,9 @@ class HowToDo(APIView):
         res = workout.AskHowToDo()
         return Response({"message": res})
 
+class OverallCheck(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        res = Workout.OverallCheck(request.user)
+        return Response({"message": res})
 
