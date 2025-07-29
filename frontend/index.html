@@ -4,25 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gymi - Your Personal Gym Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Bootstrap 5 Dark Theme -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/bootstrap-dark.min.css" rel="stylesheet">
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+      body {
+        background: #111 url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+        background-size: cover;
+        color: #fff;
+        min-height: 100vh;
+      }
+      .navbar, .footer { background: rgba(24,24,24,0.98) !important; }
+      .hero-section {
+        background: rgba(24,24,24,0.92);
+        border-radius: 1.5rem;
+        margin: 2rem auto 2rem auto;
+        max-width: 700px;
+        padding: 2.5rem 2rem 2rem 2rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        text-align: center;
+      }
+      .hero-section img {
+        max-width: 120px;
+        margin-bottom: 1.2rem;
+        border-radius: 50%;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      }
+      .logo {
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        color: #fff;
+        text-align: center;
+        width: 100%;
+        display: block;
+        margin: 0 auto 0.5rem auto;
+      }
+      .main-heading {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1rem;
+        letter-spacing: 1px;
+      }
+      main#main-content {
+        background: rgba(24,24,24,0.97);
+        color: #fff;
+        border-radius: 1.2rem;
+        margin: 2rem auto 1rem auto;
+        max-width: 600px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+        padding: 2.5rem 1rem 2rem 1rem;
+        min-height: 350px;
+      }
+      @media (max-width: 600px) {
+        .hero-section, main#main-content {
+          padding: 1rem 0.2rem;
+          margin: 1rem 0.2rem;
+        }
+        .hero-section img { max-width: 80px; }
+      }
+      .footer {
+        border-radius: 0 0 18px 18px;
+        margin: 0 auto 0 auto;
+        max-width: 700px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        font-size: 1.1rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <nav>
-        <div class="logo">Gymi</div>
-        <ul id="nav-links">
-            <li><a href="#login" id="nav-login">Login</a></li>
-            <li><a href="#register" id="nav-register">Register</a></li>
-            <li><a href="#workouts" id="nav-workouts" style="display:none;">Workouts</a></li>
-            <li><a href="#logout" id="nav-logout" style="display:none;">Logout</a></li>
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark px-3 animate__animated animate__fadeInDown justify-content-center">
+        <span class="navbar-brand logo">Gymi</span>
     </nav>
-    <main id="main-content">
+    <section class="hero-section animate__animated animate__fadeInUp">
+      <img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png" alt="Gymi Logo"/>
+      <h1 class="main-heading">Welcome to Gymi</h1>
+      <p class="lead">Track your workouts, get AI feedback, and reach your fitness goals with a beautiful, modern, mobile-friendly app.</p>
+      <ul class="nav justify-content-center mt-4" id="nav-links">
+        <li class="nav-item"><a class="nav-link" href="#login" id="nav-login">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="#register" id="nav-register">Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="#workouts" id="nav-workouts" style="display:none;">Workouts</a></li>
+        <li class="nav-item"><a class="nav-link" href="#logout" id="nav-logout" style="display:none;">Logout</a></li>
+      </ul>
+    </section>
+    <main id="main-content" class="container-fluid animate__animated animate__fadeIn bg-dark">
         <!-- Dynamic content will be injected here by script.js -->
     </main>
-    <footer>
-        <span>Made with ❤️ for fitness</span>
+    <footer class="footer mt-auto py-3 text-center animate__animated animate__fadeInUp">
+        <span>Made by Behrad Malakouti</span>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 

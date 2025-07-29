@@ -63,13 +63,19 @@ function setNav() {
 function renderLogin() {
     setNav();
     main.innerHTML = `
-        <h2>Login</h2>
-        <form id="login-form">
-            <input type="text" name="username" placeholder="Username" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Login</button>
+        <h2 class="main-heading">Login</h2>
+        <form id="login-form" class="p-3 rounded bg-dark-subtle shadow-sm">
+            <div class="mb-3">
+                <label for="login-username" class="form-label">Username</label>
+                <input type="text" id="login-username" name="username" class="form-control" placeholder="Username" required />
+            </div>
+            <div class="mb-3">
+                <label for="login-password" class="form-label">Password</label>
+                <input type="password" id="login-password" name="password" class="form-control" placeholder="Password" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 my-2">Login</button>
         </form>
-        <p>Don't have an account? <a href="#register">Register here</a></p>
+        <p class="text-center">Don't have an account? <a href="#register">Register here</a></p>
     `;
     document.getElementById('login-form').onsubmit = async (e) => {
         e.preventDefault();
@@ -98,14 +104,23 @@ function renderLogin() {
 function renderRegister() {
     setNav();
     main.innerHTML = `
-        <h2>Register</h2>
-        <form id="register-form">
-            <input type="text" name="username" placeholder="Username" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <input type="text" name="phone" placeholder="Phone (09XXXXXXXXX)" required />
-            <button type="submit">Register</button>
+        <h2 class="main-heading">Register</h2>
+        <form id="register-form" class="p-3 rounded bg-dark-subtle shadow-sm">
+            <div class="mb-3">
+                <label for="register-username" class="form-label">Username</label>
+                <input type="text" id="register-username" name="username" class="form-control" placeholder="Username" required />
+            </div>
+            <div class="mb-3">
+                <label for="register-password" class="form-label">Password</label>
+                <input type="password" id="register-password" name="password" class="form-control" placeholder="Password" required />
+            </div>
+            <div class="mb-3">
+                <label for="register-phone" class="form-label">Phone</label>
+                <input type="text" id="register-phone" name="phone" class="form-control" placeholder="Phone (09XXXXXXXXX)" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 my-2">Register</button>
         </form>
-        <p>Already have an account? <a href="#login">Login here</a></p>
+        <p class="text-center">Already have an account? <a href="#login">Login here</a></p>
     `;
     document.getElementById('register-form').onsubmit = async (e) => {
         e.preventDefault();
@@ -145,7 +160,14 @@ async function handleLogout() {
 // --- Workouts ---
 async function renderWorkouts() {
     setNav();
-    main.innerHTML = '<h2>Your Workouts</h2><div class="workout-list" id="workout-list"></div><button id="add-workout">+ Add Workout</button><button id="ai-feedback" style="margin-top:1rem;">Get AI Feedback</button>';
+    main.innerHTML = `
+        <h2 class="main-heading">Your Workouts</h2>
+        <div class="workout-list" id="workout-list"></div>
+        <div class="d-flex flex-column flex-md-row gap-2 mt-3">
+            <button id="add-workout" class="btn btn-success flex-fill animate__animated animate__pulse">+ Add Workout</button>
+            <button id="ai-feedback" class="btn btn-info flex-fill animate__animated animate__pulse">Get AI Feedback</button>
+        </div>
+    `;
     document.getElementById('add-workout').onclick = () => showWorkoutModal();
     document.getElementById('ai-feedback').onclick = () => showAIFeedback();
     const res = await fetch(`${API_BASE}/workout/`, { method: 'GET', credentials: 'include' });
@@ -163,11 +185,14 @@ function renderWorkoutList() {
     list.innerHTML = '';
     workouts.forEach(w => {
         const card = document.createElement('div');
-        card.className = 'workout-card';
+        card.className = 'workout-card card bg-dark text-white mb-4 shadow';
+        card.style.cursor = 'pointer';
         card.innerHTML = `
-            <strong>${w.name_english || ''}</strong> <span style="color:#6366f1;">${w.name_persian || ''}</span><br>
-            <span>Score: ${w.score || '-'}</span><br>
-            <span>Last Weight: ${w.last_weight || '-'}</span>
+            <div class="card-body">
+                <h5 class="card-title mb-2 text-info">${w.name_english || ''} <span class="text-info">${w.name_persian || ''}</span></h5>
+                <div class="mb-1"><b>Score:</b> ${w.score || '-'}</div>
+                <div class="mb-1"><b>Last Weight:</b> ${w.last_weight || '-'}</div>
+            </div>
         `;
         card.onclick = () => showWorkoutDetail(w);
         list.appendChild(card);
@@ -177,14 +202,20 @@ function renderWorkoutList() {
 function showWorkoutDetail(w) {
     currentWorkout = w;
     showModal(`
-        <h3>${w.name_english || ''} <span style="color:#6366f1;">${w.name_persian || ''}</span></h3>
-        <p><b>Score:</b> ${w.score || '-'}</p>
-        <p><b>User Tips:</b> ${w.user_tips || '-'}</p>
-        <p><b>Sets:</b> ${formatSets(w.sets)}</p>
-        <p><b>Last Weight:</b> ${w.last_weight || '-'}</p>
-        <button id="edit-workout">Edit</button>
-        <button id="ai-howto">AI: How to do?</button>
-        <button id="close-modal">Close</button>
+        <div class="modal-header bg-dark text-white">
+          <h3 class="text-info">${w.name_english || ''} <span class="text-info">${w.name_persian || ''}</span></h3>
+        </div>
+        <div class="modal-body bg-dark text-white">
+          <div class="mb-3"><b>Score:</b> <span>${w.score || '-'}</span></div>
+          <div class="mb-3"><b>User Tips:</b> <span>${w.user_tips || '-'}</span></div>
+          <div class="mb-3"><b>Sets:</b> <span>${formatSets(w.sets)}</span></div>
+          <div class="mb-3"><b>Last Weight:</b> <span>${w.last_weight || '-'}</span></div>
+        </div>
+        <div class="modal-footer bg-dark">
+          <button id="edit-workout" class="btn btn-primary w-100 my-2">Edit</button>
+          <button id="ai-howto" class="btn btn-info w-100 my-2">AI: How to do?</button>
+          <button id="close-modal" class="btn btn-secondary w-100 my-2">Close</button>
+        </div>
     `);
     document.getElementById('edit-workout').onclick = () => showWorkoutModal(w);
     document.getElementById('ai-howto').onclick = () => showAIHowTo(w);
@@ -203,50 +234,72 @@ function formatSets(sets) {
 }
 
 function showWorkoutModal(w = null) {
-    // Helper to render the dynamic sets input UI
+    // For add: start with empty array. For edit: pre-fill only if sets exist and are array of numbers.
+    let setsArr = (w && Array.isArray(w.sets) && w.sets.every(x => typeof x === 'number')) ? [...w.sets] : [];
     function renderSetsInputs(setsArr) {
         return `
             <div id="sets-container">
                 ${setsArr.map((val, idx) => `
-                    <div class="set-row">
-                        <input type="number" class="set-input" value="${val}" min="1" style="width:70px;" />
-                        <button type="button" class="delete-set" data-idx="${idx}" style="margin-left:4px;">&minus;</button>
+                    <div class="set-row d-flex align-items-center mb-2">
+                        <input type="number" class="set-input form-control me-2" value="${val !== '' ? val : ''}" min="1" style="width:100px;" />
+                        <button type="button" class="delete-set btn btn-danger btn-sm ms-2" data-idx="${idx}">&minus;</button>
                     </div>
                 `).join('')}
             </div>
-            <button type="button" id="add-set" style="margin-top:8px;">+ Add Set</button>
+            <button type="button" id="add-set" class="btn btn-success btn-sm mt-2 w-100">+ Add Set</button>
         `;
     }
-
-    // For add: start with empty array. For edit: pre-fill only if sets exist and are array of numbers.
-    let setsArr = (w && Array.isArray(w.sets) && w.sets.every(x => typeof x === 'number')) ? [...w.sets] : [];
-
     showModal(`
-        <h3>${w ? 'Edit Workout' : 'Add Workout'}</h3>
-        <form id="workout-form">
-            <input type="text" name="name_english" placeholder="English Name" value="${w?.name_english || ''}" required />
-            <input type="text" name="name_persian" placeholder="Persian Name" value="${w?.name_persian || ''}" />
-            <input type="number" name="score" placeholder="Score (1-5)" min="1" max="5" value="${w?.score || ''}" />
-            <textarea name="user_tips" placeholder="User Tips">${w?.user_tips || ''}</textarea>
-            <label>Sets:</label>
-            <div id="sets-dynamic-area">${renderSetsInputs(setsArr)}</div>
-            <input type="number" name="last_weight" placeholder="Last Weight" value="${w?.last_weight || ''}" />
-            <button type="submit">${w ? 'Update' : 'Add'}</button>
-            <button type="button" id="close-modal">Cancel</button>
+        <h3 class="mb-3"><span class="text-info">${w ? 'Edit Workout' : 'Add Workout'}</span></h3>
+        <form id="workout-form" class="p-2 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="name_english" class="form-label">English Name</label>
+                <input type="text" id="name_english" name="name_english" class="form-control" placeholder="English Name" value="${w?.name_english || ''}" required />
+            </div>
+            <div class="mb-3">
+                <label for="name_persian" class="form-label">Persian Name</label>
+                <input type="text" id="name_persian" name="name_persian" class="form-control" placeholder="Persian Name" value="${w?.name_persian || ''}" />
+            </div>
+            <div class="mb-3">
+                <label for="score" class="form-label">Score (1-5)</label>
+                <input type="number" id="score" name="score" class="form-control" placeholder="Score (1-5)" min="1" max="5" value="${w?.score || ''}" />
+            </div>
+            <div class="mb-3">
+                <label for="user_tips" class="form-label">User Tips</label>
+                <textarea id="user_tips" name="user_tips" class="form-control" placeholder="User Tips">${w?.user_tips || ''}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Sets</label>
+                <div id="sets-dynamic-area">${renderSetsInputs(setsArr)}</div>
+            </div>
+            <div class="mb-3">
+                <label for="last_weight" class="form-label">Last Weight</label>
+                <input type="number" id="last_weight" name="last_weight" class="form-control" placeholder="Last Weight" value="${w?.last_weight || ''}" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 my-2">${w ? 'Update' : 'Add'}</button>
+            <button type="button" id="close-modal" class="btn btn-secondary w-100 my-2">Cancel</button>
         </form>
     `);
     document.getElementById('close-modal').onclick = closeModal;
-
     // Dynamic sets logic
     function updateSetsUI() {
+        // Save current input values before re-rendering
+        const setInputs = document.querySelectorAll('.set-input');
+        setsArr = Array.from(setInputs).map(input => input.value ? parseInt(input.value) : '');
         document.getElementById('sets-dynamic-area').innerHTML = renderSetsInputs(setsArr);
         attachSetsHandlers();
     }
     function attachSetsHandlers() {
-        document.getElementById('add-set').onclick = () => {
-            setsArr.push("");
-            updateSetsUI();
-        };
+        const addSetBtn = document.getElementById('add-set');
+        if (addSetBtn) {
+            addSetBtn.onclick = () => {
+                // Save current values before adding
+                const setInputs = document.querySelectorAll('.set-input');
+                setsArr = Array.from(setInputs).map(input => input.value ? parseInt(input.value) : '');
+                setsArr.push("");
+                updateSetsUI();
+            };
+        }
         document.querySelectorAll('.delete-set').forEach(btn => {
             btn.onclick = (e) => {
                 const idx = parseInt(btn.getAttribute('data-idx'));
@@ -255,8 +308,7 @@ function showWorkoutModal(w = null) {
             };
         });
     }
-    attachSetsHandlers();
-
+    updateSetsUI(); // Ensure add-set is attached after first render
     document.getElementById('workout-form').onsubmit = async (e) => {
         e.preventDefault();
         // Collect sets from UI
@@ -298,18 +350,26 @@ function showWorkoutModal(w = null) {
 function showModal(html) {
     closeModal();
     const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = `<div class="modal-content">${html}</div>`;
+    modal.className = 'modal show d-block';
+    modal.style.background = 'rgba(0,0,0,0.7)';
+    modal.style.zIndex = '2000';
+    modal.tabIndex = -1;
+    modal.innerHTML = `<div class="modal-dialog modal-dialog-centered"><div class="modal-content">${html}</div></div>`;
+    modal.onclick = function(e) {
+        if (e.target === modal) closeModal();
+    };
     document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
 }
 function closeModal() {
     const modal = document.querySelector('.modal');
     if (modal) modal.remove();
+    document.body.classList.remove('modal-open');
 }
 
 // --- AI Features ---
 async function showAIHowTo(w) {
-    showModal('<p>Loading AI instructions...</p>');
+    showModal('<p class="text-center">Loading AI instructions...</p>');
   
     try {
       const res = await fetch(`${API_BASE}/workout/ask/${w.id}`, { credentials: 'include' });
@@ -321,21 +381,21 @@ async function showAIHowTo(w) {
       // Parse and inject Markdown
       const html = (window.marked ? window.marked.parse : marked.parse)(data.message); // 'marked' must be loaded
       showModal(`
-        <div class="modal-header">
+        <div class="modal-header bg-dark text-white">
           <h3>AI: How to do ${w.name_english}</h3>
         </div>
-        <div class="modal-body">
-          <div id="markdown-output">${html}</div>
+        <div class="modal-body bg-dark text-white">
+          <div id="markdown-output" class="text-white">${html}</div>
         </div>
-        <div class="modal-footer">
-          <button id="close-modal">Close</button>
+        <div class="modal-footer bg-dark">
+          <button id="close-modal" class="btn btn-secondary w-100 my-2">Close</button>
         </div>
       `);
   
       document.getElementById('close-modal').onclick = closeModal;
     } catch (err) {
       console.error(err);
-      showModal('<p>Failed to get AI instructions.</p><button id="close-modal">Close</button>');
+      showModal('<p class="text-center">Failed to get AI instructions.</p><button id="close-modal" class="btn btn-secondary w-100 my-2">Close</button>');
       document.getElementById('close-modal').onclick = closeModal;
     }
 }
@@ -355,27 +415,27 @@ async function showAIHowTo(w) {
 // }
 
 async function showAIFeedback() {
-    showModal('<p>Loading AI feedback...</p>');
+    showModal('<p class="text-center">Loading AI feedback...</p>');
     try {
         const res = await fetch(`${API_BASE}/workout/check/`, { credentials: 'include' });
         if (!res.ok) throw new Error('Fetch failed');
         const data = await res.json();
         const html = (window.marked ? window.marked.parse : marked.parse)(data.message); // 'marked' must be loaded
         showModal(`
-            <div class="modal-header">
+            <div class="modal-header bg-dark text-white">
               <h3>AI: Overall Feedback</h3>
             </div>
-            <div class="modal-body">
-              <div id="markdown-output">${html}</div>
+            <div class="modal-body bg-dark text-white">
+              <div id="markdown-output" class="text-white">${html}</div>
             </div>
-            <div class="modal-footer">
-              <button id="close-modal">Close</button>
+            <div class="modal-footer bg-dark">
+              <button id="close-modal" class="btn btn-secondary w-100 my-2">Close</button>
             </div>
         `);
         document.getElementById('close-modal').onclick = closeModal;
     } catch (err) {
         console.error(err);
-        showModal('<p>Failed to get AI feedback.</p><button id="close-modal">Close</button>');
+        showModal('<p class="text-center">Failed to get AI feedback.</p><button id="close-modal" class="btn btn-secondary w-100 my-2">Close</button>');
         document.getElementById('close-modal').onclick = closeModal;
     }
 } 
