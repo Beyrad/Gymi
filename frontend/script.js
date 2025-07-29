@@ -319,7 +319,7 @@ async function showAIHowTo(w) {
       const data = await res.json();
   
       // Parse and inject Markdown
-      const html = marked.parse(data.message); // 'marked' must be loaded
+      const html = (window.marked ? window.marked.parse : marked.parse)(data.message); // 'marked' must be loaded
       showModal(`
         <div class="modal-header">
           <h3>AI: How to do ${w.name_english}</h3>
@@ -356,7 +356,26 @@ async function showAIHowTo(w) {
 
 async function showAIFeedback() {
     showModal('<p>Loading AI feedback...</p>');
-    // There is no direct endpoint for overall feedback, so show a message
-    showModal('<p>AI feedback feature is not implemented in the backend API.</p><button id="close-modal">Close</button>');
-    document.getElementById('close-modal').onclick = closeModal;
+    try {
+        const res = await fetch(`${API_BASE}/workout/check/`, { credentials: 'include' });
+        if (!res.ok) throw new Error('Fetch failed');
+        const data = await res.json();
+        const html = (window.marked ? window.marked.parse : marked.parse)(data.message); // 'marked' must be loaded
+        showModal(`
+            <div class="modal-header">
+              <h3>AI: Overall Feedback</h3>
+            </div>
+            <div class="modal-body">
+              <div id="markdown-output">${html}</div>
+            </div>
+            <div class="modal-footer">
+              <button id="close-modal">Close</button>
+            </div>
+        `);
+        document.getElementById('close-modal').onclick = closeModal;
+    } catch (err) {
+        console.error(err);
+        showModal('<p>Failed to get AI feedback.</p><button id="close-modal">Close</button>');
+        document.getElementById('close-modal').onclick = closeModal;
+    }
 } 
