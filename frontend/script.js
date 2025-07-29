@@ -63,19 +63,44 @@ function setNav() {
 function renderLogin() {
     setNav();
     main.innerHTML = `
-        <h2 class="main-heading">Login</h2>
-        <form id="login-form" class="p-3 rounded bg-dark-subtle shadow-sm">
-            <div class="mb-3">
-                <label for="login-username" class="form-label">Username</label>
-                <input type="text" id="login-username" name="username" class="form-control" placeholder="Username" required />
+        <div class="d-flex justify-content-center align-items-center min-vh-100">
+            <div class="card shadow-lg border-0 rounded-4" style="max-width: 400px; width: 100%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="text-white fw-bold mb-2">Welcome Back</h2>
+                        <p class="text-white-50">Sign in to your account</p>
+                    </div>
+                    <form id="login-form" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="login-username" class="form-label text-white fw-semibold">Username</label>
+                            <div class="input-group rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-0">
+                                    <i class="fas fa-user text-info"></i>
+                                </span>
+                                <input type="text" id="login-username" name="username" class="form-control border-0 py-3" placeholder="Enter your username" required />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="login-password" class="form-label text-white fw-semibold">Password</label>
+                            <div class="input-group rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-0">
+                                    <i class="fas fa-lock text-info"></i>
+                                </span>
+                                <input type="password" id="login-password" name="password" class="form-control border-0 py-3" placeholder="Enter your password" required />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-light w-100 py-3 fw-bold text-info rounded-3 mb-3" style="background: linear-gradient(45deg, #ffffff, #f8f9fa); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+                    </form>
+                    <div class="text-center">
+                        <p class="text-white-50 mb-0">Don't have an account? 
+                            <a href="#register" class="text-white fw-bold text-decoration-none">Register here</a>
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="login-password" class="form-label">Password</label>
-                <input type="password" id="login-password" name="password" class="form-control" placeholder="Password" required />
             </div>
-            <button type="submit" class="btn btn-primary w-100 my-2">Login</button>
-        </form>
-        <p class="text-center">Don't have an account? <a href="#register">Register here</a></p>
     `;
     document.getElementById('login-form').onsubmit = async (e) => {
         e.preventDefault();
@@ -104,23 +129,53 @@ function renderLogin() {
 function renderRegister() {
     setNav();
     main.innerHTML = `
-        <h2 class="main-heading">Register</h2>
-        <form id="register-form" class="p-3 rounded bg-dark-subtle shadow-sm">
-            <div class="mb-3">
-                <label for="register-username" class="form-label">Username</label>
-                <input type="text" id="register-username" name="username" class="form-control" placeholder="Username" required />
+        <div class="d-flex justify-content-center align-items-center min-vh-100">
+            <div class="card shadow-lg border-0" style="max-width: 450px; width: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="text-white fw-bold mb-2">Create Account</h2>
+                        <p class="text-white-50">Join us and start your fitness journey</p>
+                    </div>
+                    <form id="register-form" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="register-username" class="form-label text-white fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-0">
+                                    <i class="fas fa-user text-danger"></i>
+                                </span>
+                                <input type="text" id="register-username" name="username" class="form-control border-0 py-3" placeholder="Choose a username" required />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="register-password" class="form-label text-white fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-0">
+                                    <i class="fas fa-lock text-danger"></i>
+                                </span>
+                                <input type="password" id="register-password" name="password" class="form-control border-0 py-3" placeholder="Create a password" required />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="register-phone" class="form-label text-white fw-semibold">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-0">
+                                    <i class="fas fa-phone text-danger"></i>
+                                </span>
+                                <input type="text" id="register-phone" name="phone" class="form-control border-0 py-3" placeholder="09XXXXXXXXX" required />
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-light w-100 py-3 fw-bold text-danger mb-3" style="background: linear-gradient(45deg, #ffffff, #f8f9fa); border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </form>
+                    <div class="text-center">
+                        <p class="text-white-50 mb-0">Already have an account? 
+                            <a href="#login" class="text-white fw-bold text-decoration-none">Login here</a>
+                        </p>
+                    </div>
             </div>
-            <div class="mb-3">
-                <label for="register-password" class="form-label">Password</label>
-                <input type="password" id="register-password" name="password" class="form-control" placeholder="Password" required />
             </div>
-            <div class="mb-3">
-                <label for="register-phone" class="form-label">Phone</label>
-                <input type="text" id="register-phone" name="phone" class="form-control" placeholder="Phone (09XXXXXXXXX)" required />
             </div>
-            <button type="submit" class="btn btn-primary w-100 my-2">Register</button>
-        </form>
-        <p class="text-center">Already have an account? <a href="#login">Login here</a></p>
     `;
     document.getElementById('register-form').onsubmit = async (e) => {
         e.preventDefault();
@@ -208,7 +263,7 @@ function showWorkoutDetail(w) {
         <div class="modal-body bg-dark text-white">
           <div class="mb-3"><b>Score:</b> <span>${w.score || '-'}</span></div>
           <div class="mb-3"><b>User Tips:</b> <span>${w.user_tips || '-'}</span></div>
-          <div class="mb-3"><b>Sets:</b> <span>${formatSets(w.sets)}</span></div>
+          <div class="mb-3"><b>Sets:</b> </br> <span>${formatSets(w.sets)}</span></div>
           <div class="mb-3"><b>Last Weight:</b> <span>${w.last_weight || '-'}</span></div>
         </div>
         <div class="modal-footer bg-dark">
@@ -320,7 +375,7 @@ function showWorkoutModal(w = null) {
         </form>
     `);
     document.getElementById('close-modal').onclick = closeModal;
-    updateSetsUI();
+                updateSetsUI();
     document.getElementById('workout-form').onsubmit = async (e) => {
         e.preventDefault();
         // Collect sets from setsArr
