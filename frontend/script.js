@@ -234,14 +234,15 @@ function formatSets(sets) {
 }
 
 function showWorkoutModal(w = null) {
-    // For add: start with empty array. For edit: pre-fill only if sets exist and are array of numbers.
+    // Always start with a valid array for setsArr
     let setsArr = (w && Array.isArray(w.sets) && w.sets.every(x => typeof x === 'number')) ? [...w.sets] : [];
-    function renderSetsInputs(setsArr) {
+
+    function renderSetsInputs() {
         return `
             <div id="sets-container">
                 ${setsArr.map((val, idx) => `
                     <div class="set-row d-flex align-items-center mb-2">
-                        <input type="number" class="set-input form-control me-2" value="${val !== '' ? val : ''}" min="1" style="width:100px;" />
+                        <input type="number" class="set-input form-control me-2" value="${val !== '' ? val : ''}" min="1" style="width:100px;" data-idx="${idx}" />
                         <button type="button" class="delete-set btn btn-danger btn-sm ms-2" data-idx="${idx}">&minus;</button>
                     </div>
                 `).join('')}
@@ -249,6 +250,44 @@ function showWorkoutModal(w = null) {
             <button type="button" id="add-set" class="btn btn-success btn-sm mt-2 w-100">+ Add Set</button>
         `;
     }
+
+    function updateSetsUI() {
+        const setsArea = document.getElementById('sets-dynamic-area');
+        if (setsArea) {
+            setsArea.innerHTML = renderSetsInputs();
+            attachSetsHandlers();
+        }
+    }
+
+    function attachSetsHandlers() {
+        // Add Set button
+        const addSetBtn = document.getElementById('add-set');
+        if (addSetBtn) {
+            addSetBtn.onclick = (e) => {
+                e.preventDefault();
+                setsArr.push(1); // Default to 1
+                updateSetsUI();
+            };
+        }
+        // Delete Set buttons
+        document.querySelectorAll('.delete-set').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const idx = parseInt(btn.getAttribute('data-idx'));
+                setsArr.splice(idx, 1);
+                updateSetsUI();
+            };
+        });
+        // Update value on input change
+        document.querySelectorAll('.set-input').forEach(input => {
+            input.oninput = (e) => {
+                const idx = parseInt(input.getAttribute('data-idx'));
+                let val = parseInt(input.value);
+                setsArr[idx] = (!isNaN(val) && val > 0) ? val : '';
+            };
+        });
+    }
+
     showModal(`
         <h3 class="mb-3"><span class="text-info">${w ? 'Edit Workout' : 'Add Workout'}</span></h3>
         <form id="workout-form" class="p-2 rounded shadow-sm">
@@ -270,7 +309,7 @@ function showWorkoutModal(w = null) {
             </div>
             <div class="mb-3">
                 <label class="form-label">Sets</label>
-                <div id="sets-dynamic-area">${renderSetsInputs(setsArr)}</div>
+                <div id="sets-dynamic-area">${renderSetsInputs()}</div>
             </div>
             <div class="mb-3">
                 <label for="last_weight" class="form-label">Last Weight</label>
@@ -281,43 +320,11 @@ function showWorkoutModal(w = null) {
         </form>
     `);
     document.getElementById('close-modal').onclick = closeModal;
-    // Dynamic sets logic
-    function updateSetsUI() {
-        // Save current input values before re-rendering
-        const setInputs = document.querySelectorAll('.set-input');
-        setsArr = Array.from(setInputs).map(input => input.value ? parseInt(input.value) : '');
-        document.getElementById('sets-dynamic-area').innerHTML = renderSetsInputs(setsArr);
-        attachSetsHandlers();
-    }
-    function attachSetsHandlers() {
-        const addSetBtn = document.getElementById('add-set');
-        if (addSetBtn) {
-            addSetBtn.onclick = () => {
-                // Save current values before adding
-                const setInputs = document.querySelectorAll('.set-input');
-                setsArr = Array.from(setInputs).map(input => input.value ? parseInt(input.value) : '');
-                setsArr.push("");
-                updateSetsUI();
-            };
-        }
-        document.querySelectorAll('.delete-set').forEach(btn => {
-            btn.onclick = (e) => {
-                const idx = parseInt(btn.getAttribute('data-idx'));
-                setsArr.splice(idx, 1);
-                updateSetsUI();
-            };
-        });
-    }
-    updateSetsUI(); // Ensure add-set is attached after first render
+    updateSetsUI();
     document.getElementById('workout-form').onsubmit = async (e) => {
         e.preventDefault();
-        // Collect sets from UI
-        const setInputs = document.querySelectorAll('.set-input');
-        let sets = [];
-        for (let input of setInputs) {
-            let val = parseInt(input.value);
-            if (!isNaN(val) && val > 0) sets.push(val);
-        }
+        // Collect sets from setsArr
+        let sets = setsArr.filter(val => typeof val === 'number' && val > 0);
         if (sets.length === 0) { alert('Please add at least one set.'); return; }
         const fd = new FormData(e.target);
         const payload = {
